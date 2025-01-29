@@ -1,0 +1,64 @@
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+<style>
+body {
+    font-family: sans-serif;
+}
+h1 {
+    margin-bottom: 100px;
+}
+li {
+    height: 200px;
+    list-style: none;
+}
+span.start, span.end {
+    font-weight: bold;
+    font-size: xx-large;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+span.delay {
+    display: inline-block;
+	text-align: center;
+    height: 0px;
+    width: 50px;
+    border-top: 0px solid red;
+    border-bottom: 0px solid green;
+    margin-right: 5px;
+}
+</style>
+
+<div id="app">
+  <h1 v-if="trips">Delays for {{trips[0].line}} on {{trips[0].date}}</h1>
+  <ul>
+    <li v-for="trip in trips">
+      <span class="start">{{trip.start}}</span>
+      <span class="delay"
+            v-for="seconds in trip.arrivalDelays.split(',').map(e=>parseInt(e))"
+            :title="seconds"
+            :style="{borderTopWidth: seconds/4+'px', borderBottomWidth: seconds/-4+'px'}">
+            {{~~(seconds/60)}}:{{Math.abs(seconds)%60 < 10 ? '0' : ''}}{{Math.abs(seconds)%60}}
+      </span>
+      <span class="end">{{trip.end}}</span>
+    </li>
+  </ul>
+</div>
+
+<script>
+  const { createApp, ref } = Vue
+
+  createApp({
+    setup() {
+      const trips = ref(null)
+      return {
+        trips
+      }
+    },
+    mounted() {
+      fetch('/api/delays').then(async response => {
+        console.log(response)
+        this.trips = await response.json()
+      })
+    }
+  }).mount('#app')
+</script>
