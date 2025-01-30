@@ -1,5 +1,7 @@
 from time import time
 tic = time()
+from datetime import datetime
+print("crawler run at", datetime.now())
 
 import configparser
 config = configparser.ConfigParser()
@@ -27,7 +29,7 @@ val = [(
        )
        for stopEvent in data['stopEvents']
       ]
-#print(val)
+print(val)
 cursor.executemany(sql, val)
 con.commit()
 
@@ -50,6 +52,7 @@ for row in rows:
                     )
                     for stop in data['leg']['stopSequence']
                    ]
+            print(vals)
             cursor.executemany(sql, vals)
             con.commit()
             
@@ -64,6 +67,7 @@ for row in rows:
                     )
                     for stop in data['leg']['stopSequence']
                    ]
+            print(vals)
             cursor.executemany(sql, vals)
             con.commit()
         else:
@@ -75,4 +79,6 @@ for row in rows:
 con.close()
 
 toc = time()
-print ("time", toc - tic)
+print(datetime.now())
+print ("execution took", toc - tic, "seconds")
+print("======================================================================")
