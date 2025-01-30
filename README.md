@@ -22,7 +22,7 @@ pip3.7 install flask_mysqldb --user            # for frontend
 
 Scheduling the crawler: `crontab -e` and put:
 ```
-* * * * * python3.7 /home/chrfrd/srv/bustracking/crawler.py >> crawler.log
+* * * * * python3.7 /home/chrfrd/srv/bustracking/crawler.py >> /home/chrfrd/logs/crawler.log
 ```
 
 Setting up the subdomain and port forwarding:
@@ -31,7 +31,19 @@ uberspace web domain add bustracking.chrfrd.uber.space
 uberspace web backend set bustracking.chrfrd.uber.space --http --port 5000
 ```
 
-Starting the webserver: `python3.7 server.py` (proper service coming soon :tm:)
+Running the webserver as a service:
+
+1. Create the ini file `/home/chrfrd/etc/services.d/bustracking-frontend.ini` and give it the following content:
+
+```
+[program:bustracking-frontend]
+command=python3.7 /home/chrfrd/srv/bustracking/server.py
+startsecs=60
+```
+
+2. Then execute `supervisorctl reread` and `supervisorctl update`.
+3. Bam, it's running already! Check with `supervisorctl status`.
+4. If needed, use `supervisorctl <command> bustracking-frontend`, where `<command>` can be one of `start`, `stop`, `restart`. Check the [corresponding Uberspace manual section](https://manual.uberspace.de/daemons-supervisord/) for more info, including deleting the service.
 
 Voilà!
 
