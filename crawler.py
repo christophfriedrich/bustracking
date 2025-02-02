@@ -22,7 +22,7 @@ for stopParentId in crawlTasks:
         #for se in data['stopEvents']:
         #    print(se['transportation']['id'], se['transportation']['properties']['tripCode'], se['departureTimePlanned'][0:10].replace('-',''))
         cursor = con.cursor()
-        sql = "INSERT INTO trips (line, tripCode, date, departureTimePlanned, arrivalTimePlanned) VALUES (%s, %s, %s, CONVERT_TZ(%s, 'UTC', 'Europe/Berlin'), CONVERT_TZ(%s, 'UTC', 'Europe/Berlin')) ON DUPLICATE KEY UPDATE updated=NOW()"
+        sql = "INSERT INTO trips (line, tripCode, date, departureTimePlanned, arrivalTimePlanned) VALUES (%s, %s, %s, CONVERT_TZ(%s, 'UTC', 'Europe/Berlin'), CONVERT_TZ(%s, 'UTC', 'Europe/Berlin')) ON DUPLICATE KEY UPDATE updated=NOW(), arrivalTimePlanned=VALUES(arrivalTimePlanned), departureTimePlanned=VALUES(departureTimePlanned)"
         val = [(
                 stopEvent['transportation']['id'],
                 stopEvent['transportation']['properties']['tripCode'],
