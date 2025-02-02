@@ -51,7 +51,7 @@ for row in rows:
             vals = [(
                      stop['id'],
                      stop['parent']['id'],
-                     stop['disassembledName']
+                     stop['parent']['disassembledName']
                     )
                     for stop in data['leg']['stopSequence']
                    ]
