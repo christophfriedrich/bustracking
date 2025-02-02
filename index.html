@@ -19,12 +19,21 @@ span.start, span.end {
 }
 span.delay {
     display: inline-block;
-	text-align: center;
+    text-align: center;
     height: 0px;
     width: 50px;
     border-top: 0px solid red;
     border-bottom: 0px solid green;
     margin-right: 5px;
+}
+span.nodata {
+    display: inline-block;
+    text-align: center;
+    width: 200px;
+    font-style: italic;
+    background-color: #bbb;
+    padding: 5px;
+    padding-bottom: 0px;
 }
 </style>
 
@@ -33,12 +42,13 @@ span.delay {
   <ul>
     <li v-for="trip in trips">
       <span class="start">{{trip.start}}</span>
-      <span class="delay"
+      <span v-if="trip.arrivalDelays" class="delay"
             v-for="seconds in trip.arrivalDelays.split(',').map(e=>parseInt(e))"
             :title="seconds"
             :style="{borderTopWidth: seconds/4+'px', borderBottomWidth: seconds/-4+'px'}">
             {{~~(seconds/60)}}:{{Math.abs(seconds)%60 < 10 ? '0' : ''}}{{Math.abs(seconds)%60}}
       </span>
+      <span v-else class="nodata">no data</span>
       <span class="end">{{trip.end}}</span>
     </li>
   </ul>
