@@ -8,7 +8,7 @@ h1 {
     margin-bottom: 100px;
 }
 li {
-    height: 200px;
+    margin-bottom: 100px;
     list-style: none;
 }
 span.start, span.end {
@@ -41,7 +41,7 @@ span.nodata {
   <h1 v-if="trips">Delays for {{trips[0].line}} on {{trips[0].date}}</h1>
   <ul>
     <li v-for="trip in trips">
-      <span class="start">{{trip.start}}</span>
+      <span class="start" :title="'Tripcode: ' + trip.tripCode">{{trip.start}}</span>
       <span v-if="trip.arrivalDelays" class="delay"
             v-for="seconds in trip.arrivalDelays.split(',').map(e=>parseInt(e))"
             :title="seconds"
