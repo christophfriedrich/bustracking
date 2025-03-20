@@ -7,6 +7,13 @@ body {
 h1 {
     margin-bottom: 100px;
 }
+h1 input, h1 select {
+  font-family: sans-serif;
+  font-size: inherit;
+  background-color: white;
+  border: 0;
+  border-bottom: 3px solid black;
+}
 li {
     margin-bottom: 100px;
     list-style: none;
@@ -38,7 +45,14 @@ span.nodata {
 </style>
 
 <div id="app">
-  <h1 v-if="trips">Delays for {{trips[0].line}} on {{trips[0].date}}</h1>
+  <h1 v-if="trips">
+    Delays for
+    <select v-model="line" @change="getDelays()">
+      <option v-for="line in lines">{{line}}</option>
+    </select>
+    on
+    <input type="date" v-model="date" @change="getDelays()">
+  </h1>
   <ul>
     <li v-for="trip in trips">
       <span class="start" :title="'Tripcode: ' + trip.tripCode">{{trip.start}}</span>
@@ -59,16 +73,32 @@ span.nodata {
 
   createApp({
     setup() {
+      const lines = ref([])
+      const line = ref("wvv:10010:E:R:24d")
+      const date = ref((new Date()).toISOString().substr(0,10))  // today as YYYY-MM-DD
       const trips = ref(null)
       return {
+        lines,
+        line,
+        date,
         trips
       }
     },
     mounted() {
-      fetch('/api/delays').then(async response => {
-        console.log(response)
-        this.trips = await response.json()
+      fetch('/api/lines')
+      .then(async response => {
+        this.lines = await response.json()
       })
+      this.getDelays()
+    },
+    methods: {
+      getDelays() {
+        console.log(this.line + ' - ' + this.date)
+        fetch('/api/delays?line=' + this.line + '&date=' + this.date.replaceAll('-',''))
+        .then(async response => {
+          this.trips = await response.json()
+        })
+      }
     }
   }).mount('#app')
 </script>
