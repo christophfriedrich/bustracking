@@ -59,7 +59,7 @@ span.nodata {
       <span v-if="trip.arrivalDelays" class="delay"
             v-for="seconds in trip.arrivalDelays.split(',').map(e=>parseInt(e))"
             :title="seconds"
-            :style="{borderTopWidth: seconds/4+'px', borderBottomWidth: seconds/-4+'px'}">
+            :style="{borderTopWidth: seconds<0 ? 0 : seconds/4+'px', borderBottomWidth: seconds>0 ? 0 : seconds/-4+'px'}">
             {{~~(seconds/60)}}:{{Math.abs(seconds)%60 < 10 ? '0' : ''}}{{Math.abs(seconds)%60}}
       </span>
       <span v-else class="nodata">no data</span>
